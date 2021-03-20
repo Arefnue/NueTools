@@ -11,5 +11,11 @@ namespace Learning.Scripts.Utils
             v.z = Mathf.Round(v.z);
             return v;
         }
+        
+        public static Vector3 Round(this Vector3 v,float size)
+        {
+            return (v / size).Round() * size;
+        }
+        
     }
 }

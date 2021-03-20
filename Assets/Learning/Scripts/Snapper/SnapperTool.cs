@@ -58,7 +58,7 @@ namespace Learning.Scripts.Snapper
             foreach (GameObject go in Selection.gameObjects)
             {
                 Undo.RecordObject(go.transform,UNDO_STR_SNAP);
-                go.transform.position = go.transform.position.Round();
+                go.transform.position = go.transform.position.Round(gridSize); 
             }
         }
     }
