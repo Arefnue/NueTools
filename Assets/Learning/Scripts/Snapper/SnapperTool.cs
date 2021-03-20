@@ -1,6 +1,7 @@
 using Learning.Scripts.Utils;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Learning.Scripts.Snapper
 {
@@ -33,7 +34,33 @@ namespace Learning.Scripts.Snapper
 
         private void DuringSceneGUI(SceneView sceneView)
         {
-            //Handles.DrawLine(Vector3.zero, Vector3.up);
+            Handles.zTest = CompareFunction.LessEqual;
+            
+            const float gridDrawExtent = 16;
+
+            int lineCount = Mathf.RoundToInt((gridDrawExtent * 2) / gridSize);
+            if (lineCount %2 == 0)
+            {
+                lineCount++;
+            }
+            int halfLineCount = lineCount / 2;
+            
+            
+            for (int i = 0; i < lineCount; i++)
+            {
+                int intOffset = i-halfLineCount;
+                float xCoord = intOffset * gridSize;
+                float zCoord0 = halfLineCount * gridSize;
+                float zCoord1 = -halfLineCount * gridSize;
+
+                Vector3 p0 = new Vector3(xCoord, 0f, zCoord0);
+                Vector3 p1 = new Vector3(xCoord, 0f, zCoord1);
+                Handles.DrawAAPolyLine(p0,p1);
+                
+                p0 = new Vector3(zCoord0, 0f, xCoord);
+                p1 = new Vector3( zCoord1, 0f,xCoord);
+                Handles.DrawAAPolyLine(p0,p1);
+            }
         }
 
         
