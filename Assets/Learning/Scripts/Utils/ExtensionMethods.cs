@@ -17,5 +17,10 @@ namespace Learning.Scripts.Utils
             return (v / size).Round() * size;
         }
         
+        public static float Round(this float v,float size)
+        {
+            return Mathf.Round(v / size) * size;
+        }
+        
     }
 }
