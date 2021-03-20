@@ -15,13 +15,17 @@ namespace Learning.Scripts.Snapper
 
         public float gridSize = 1f;
 
-        private SerializedObject so;
-        private SerializedProperty propGridSize;
+        //public Vector3[] points = new Vector3[4];
+
+        private SerializedObject _so;
+        private SerializedProperty _propGridSize;
+        //private SerializedProperty _propPoints;
 
         private void OnEnable()
         {
-            so = new SerializedObject(this);
-            propGridSize = so.FindProperty("gridSize");
+            _so = new SerializedObject(this);
+            _propGridSize = _so.FindProperty("gridSize");
+            //_propPoints = _so.FindProperty("points");
             Selection.selectionChanged += Repaint;
             SceneView.duringSceneGui += DuringSceneGUI;
         }
@@ -34,42 +38,58 @@ namespace Learning.Scripts.Snapper
 
         private void DuringSceneGUI(SceneView sceneView)
         {
-            Handles.zTest = CompareFunction.LessEqual;
+            // // Array
+            // _so.Update();
+            // points = Handles.PositionHandle(points, Quaternion.identity);
+            // for (int i = 0; i < _propPoints.arraySize; i++)
+            // {
+            //     SerializedProperty prop = _propPoints.GetArrayElementAtIndex(i);
+            //     prop.vector3Value = Handles.PositionHandle(prop.vector3Value, Quaternion.identity);
+            // }
+            //
+            // _so.ApplyModifiedProperties();
             
-            const float gridDrawExtent = 16;
-
-            int lineCount = Mathf.RoundToInt((gridDrawExtent * 2) / gridSize);
-            if (lineCount %2 == 0)
+            
+            if (Event.current.type == EventType.Repaint)
             {
-                lineCount++;
-            }
-            int halfLineCount = lineCount / 2;
+                Handles.zTest = CompareFunction.LessEqual;
             
-            
-            for (int i = 0; i < lineCount; i++)
-            {
-                int intOffset = i-halfLineCount;
-                float xCoord = intOffset * gridSize;
-                float zCoord0 = halfLineCount * gridSize;
-                float zCoord1 = -halfLineCount * gridSize;
+                const float gridDrawExtent = 16;
 
-                Vector3 p0 = new Vector3(xCoord, 0f, zCoord0);
-                Vector3 p1 = new Vector3(xCoord, 0f, zCoord1);
-                Handles.DrawAAPolyLine(p0,p1);
+                int lineCount = Mathf.RoundToInt((gridDrawExtent * 2) / gridSize);
+                if (lineCount %2 == 0)
+                {
+                    lineCount++;
+                }
+                int halfLineCount = lineCount / 2;
+            
+            
+                for (int i = 0; i < lineCount; i++)
+                {
+                    int intOffset = i-halfLineCount;
+                    float xCoord = intOffset * gridSize;
+                    float zCoord0 = halfLineCount * gridSize;
+                    float zCoord1 = -halfLineCount * gridSize;
+
+                    Vector3 p0 = new Vector3(xCoord, 0f, zCoord0);
+                    Vector3 p1 = new Vector3(xCoord, 0f, zCoord1);
+                    Handles.DrawAAPolyLine(p0,p1);
                 
-                p0 = new Vector3(zCoord0, 0f, xCoord);
-                p1 = new Vector3( zCoord1, 0f,xCoord);
-                Handles.DrawAAPolyLine(p0,p1);
+                    p0 = new Vector3(zCoord0, 0f, xCoord);
+                    p1 = new Vector3( zCoord1, 0f,xCoord);
+                    Handles.DrawAAPolyLine(p0,p1);
+                }
             }
+           
         }
 
         
         private void OnGUI()
         {
 
-            so.Update();
-            EditorGUILayout.PropertyField(propGridSize);
-            so.ApplyModifiedProperties();
+            _so.Update();
+            EditorGUILayout.PropertyField(_propGridSize);
+            _so.ApplyModifiedProperties();
             
             using (new EditorGUI.DisabledScope( Selection.gameObjects.Length == 0))
             {
