@@ -43,6 +43,10 @@ namespace Learning.Scripts.Snapper
             _propGridSize = _so.FindProperty("gridSize");
             _propGridType = _so.FindProperty("gridType");
             _propAngularDivisions = _so.FindProperty("angularDivisions");
+
+            gridSize = EditorPrefs.GetFloat("SNAPPER_TOOL_gridSize",1f);
+            gridType = (GridType)EditorPrefs.GetInt("SNAPPER_TOOL_gridType",0);
+            angularDivisions = EditorPrefs.GetInt("SNAPPER_TOOL_angularDivision",24);
             
             //_propPoints = _so.FindProperty("points");
             Selection.selectionChanged += Repaint;
@@ -51,6 +55,10 @@ namespace Learning.Scripts.Snapper
 
         private void OnDisable()
         {
+            EditorPrefs.SetFloat("SNAPPER_TOOL_gridSize",gridSize);
+            EditorPrefs.SetInt("SNAPPER_TOOL_gridType",(int)gridType);
+            EditorPrefs.SetInt("SNAPPER_TOOL_angularDivision",angularDivisions);
+            
             Selection.selectionChanged -= Repaint;
             SceneView.duringSceneGui -= DuringSceneGUI;
         }
